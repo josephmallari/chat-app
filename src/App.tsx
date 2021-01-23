@@ -1,24 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState  } from 'react';
+import Message from './Message';
 import './App.css';
 
+// container
+// message
+// reply to own message
 function App() {
+  const [messages, setMessages] = useState<string[]>([]);
+  const [inputText, setInputText] = useState<string>('');
+
+  function submitMessage(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setMessages([...messages, inputText]);
+    setInputText('');
+  }
+
+  const messagesMarkup = messages.map((message, i) => <Message key={i} text={message}/>);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="wrapper">
+        <header className="user">
+          <h3 className="user__name">User</h3>
+        </header>
+        <div className="messages">
+          {messagesMarkup}
+        </div>
+        <div className="submit-wrapper">
+          <form onSubmit={submitMessage}>
+            <input value={inputText} type="text" onChange={(e) => setInputText(e.target.value)}/>
+            <button type="submit">Send</button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
