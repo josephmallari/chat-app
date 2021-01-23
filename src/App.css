@@ -68,3 +68,7 @@ form button {
   line-height: 28px;
   margin-bottom: 5px;
 }
+
+.message.blur {
+  filter: blur(3px);
+}
