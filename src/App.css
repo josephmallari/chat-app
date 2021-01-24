@@ -72,3 +72,7 @@ form button {
 .message.blur {
   filter: blur(3px);
 }
+
+.message.replied {
+  background: #cdff00;
+}

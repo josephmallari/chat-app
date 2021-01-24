@@ -1,13 +1,11 @@
-import React, { ReactElement, useState, useRef } from 'react'
+import { ReactElement, useState, useRef } from 'react'
 
 interface Props {
   text: string
 }
 
-// on click blur all elements
 export default function Message({text}: Props): ReactElement {
   const [replyState, setReplyState] = useState<boolean>(false);
-  const [replyText, setReplyText] = useState<string>('');
   const replyRef = useRef<HTMLDivElement>(null);
 
   function reply() {
@@ -16,15 +14,12 @@ export default function Message({text}: Props): ReactElement {
 
     if (replyRef && replyRef.current) {
       replyRef.current.classList.remove('blur');
-      setReplyText(replyRef.current.innerHTML);
+      replyRef.current.classList.add('replied');
     }
   }
 
-  const replyClass = '';
-  // const replyClass = replyState ? ' blur' : '';
-
   return (
-    <div ref={replyRef} onClick={reply} className={`message${replyClass}`}>
+    <div ref={replyRef} onClick={reply} className='message'>
      {text} 
     </div>
   )
