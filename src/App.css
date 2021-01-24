@@ -1,11 +1,12 @@
-.App {
+.chat-app {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 60px;
+  flex-direction: column;
 }
 
-.wrapper {
+.chat-wrapper {
   border: 1px solid #000;
   border-radius: 14px;
   min-width: 350px;
@@ -13,14 +14,16 @@
 }
 
 .submit-wrapper {
-  bottom: 8px;
-  left: 8px;
+  bottom: 10px;
   position: absolute;
   width: 100%;
+  border-top: 1px solid #000;
+  padding-top: 10px;
 }
 
 form {
   width: 100%;
+  padding-left: 10px;
   display: flex;
 }
 
@@ -29,7 +32,7 @@ form input {
   appearance: none;
   border: 1px solid #000;
   border-radius: 10px;
-  padding: 5px;
+  padding: 7px;
 }
 
 form button {
@@ -44,6 +47,7 @@ form button {
 }
 
 .user {
+  height: 20px;
   padding: 5px 0 5px 12px;
   border-bottom: 1px solid #000;
 }
@@ -79,9 +83,18 @@ form button {
   background: #cdff00;
   margin-bottom: 0;
   border-radius: 4px;
-  border-bottom: 1px solid blue;
+  border-bottom: 1px solid #0000ff;
 }
 
 .message.replied + .message {
-  margin-bottom: 5px;
+  margin: 0 0 10px 14px;
+}
+
+.user-input {
+  margin-bottom: 10px;
+}
+
+.user-input input {
+  border: none;
+  border-bottom: 1px solid #000;
 }

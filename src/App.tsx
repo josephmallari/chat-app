@@ -6,6 +6,7 @@ function App() {
   const [messages, setMessages] = useState<string[]>([]);
   const [inputText, setInputText] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
 
   function triggerLastReplied() {
     const messageArray = document.querySelectorAll('.message');
@@ -19,15 +20,8 @@ function App() {
           messageArray[i].classList.add('replied');
         }
       }
-
     }
   }
-
-  useEffect(() => {
-    if (document.querySelector('.replyState')) {
-      triggerLastReplied();
-    }
-  }, [messages]);
 
   function submitMessage(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,14 +40,25 @@ function App() {
     setReplyText(replyText);
   }
 
+  useEffect(() => {
+    if (document.querySelector('.replyState')) {
+      triggerLastReplied();
+    }
+  }, [messages]);
+
+
   const messagesMarkup = messages.map((message, i) => <Message key={i} text={message} getReplyText={getReplyText} />);
 
   return (
-    <div className="App">
-      <div className="wrapper">
-        <header className="user">
-          <h3 className="user__name">Joseph Mallari</h3>
-        </header>
+    <div className="chat-app">
+      <div className="user-input">
+        Enter User Name: 
+        <input type="text" onChange={(e) => setUserName(e.target.value)}/>
+      </div>
+      <div className="chat-wrapper">
+        <div className="user">
+          <h3 className="user__name">{userName}</h3>
+        </div>
         <div className="messages">
           {messagesMarkup}
         </div>
