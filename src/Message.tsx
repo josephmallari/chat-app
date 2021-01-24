@@ -1,25 +1,37 @@
-import { ReactElement, useState, useRef } from 'react'
+import { ReactElement, useState, useRef, useEffect } from 'react'
 
 interface Props {
-  text: string
+  text: string,
+  getReplyText: (replyText: string) => void 
 }
 
-export default function Message({text}: Props): ReactElement {
+export default function Message({text, getReplyText}: Props): ReactElement {
   const [replyState, setReplyState] = useState<boolean>(false);
   const replyRef = useRef<HTMLDivElement>(null);
 
-  function reply() {
+  function toggleReplyState() {
     setReplyState(!replyState);
-    document.querySelectorAll('.message').forEach(message => message.classList.add('blur'));
-
-    if (replyRef && replyRef.current) {
-      replyRef.current.classList.remove('blur');
-      replyRef.current.classList.add('replied');
-    }
   }
 
+  useEffect(() => {
+    if (replyState) {
+      document.querySelectorAll('.message').forEach(message => message.classList.add('blur'));
+
+      if (replyRef && replyRef.current) {
+        replyRef.current.classList.remove('blur');
+
+        getReplyText(replyRef.current.innerHTML)
+      }
+    }
+    else {
+      document.querySelectorAll('.message').forEach(message => message.classList.remove('blur'));
+    }
+  }, [replyState]);
+
+  const replyStateClass = replyState ? ' replyState' : '';
+
   return (
-    <div ref={replyRef} onClick={reply} className='message'>
+    <div ref={replyRef} onClick={toggleReplyState} className={`message${replyStateClass}`}>
      {text} 
     </div>
   )

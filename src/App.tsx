@@ -5,35 +5,48 @@ import './App.css';
 function App() {
   const [messages, setMessages] = useState<string[]>([]);
   const [inputText, setInputText] = useState<string>('');
+  const [replyText, setReplyText] = useState<string>('');
+
+  function triggerLastReplied() {
+    const messageArray = document.querySelectorAll('.message');
+    const replyState = document.querySelector('.replyState');
+
+    if (replyState) {
+      replyState.classList.remove('replyState');
+
+      for (let i =0;i < messageArray.length;i++) {
+        if (i === messageArray.length - 2) {
+          messageArray[i].classList.add('replied');
+        }
+      }
+
+    }
+  }
 
   useEffect(() => {
-    if (document.querySelector('.blur')) {
-      document.querySelectorAll('.message').forEach(blur => {
-        blur.classList.remove('blur');
-      });
-
+    if (document.querySelector('.replyState')) {
       triggerLastReplied();
     }
   }, [messages]);
 
   function submitMessage(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setMessages([...messages, inputText]);
+    if (!inputText) return;
+
+    if (replyText) {
+      setMessages(prevMessages => [...prevMessages, replyText]);
+      setReplyText('');
+    }
+
+    setMessages(prevMessages => [...prevMessages, inputText]);
     setInputText('');
   }
 
-  function triggerLastReplied() {
-      const messageArray = document.querySelectorAll('.message');
-      console.log(messageArray);
-      for (let i = 0;i < messageArray.length;i++) {
-        if (i === messageArray.length - 1) {
-          console.log('do you run');
-          messageArray[i].classList.add('replied');
-        }
-      }
+  function getReplyText(replyText: string) {
+    setReplyText(replyText);
   }
 
-  const messagesMarkup = messages.map((message, i) => <Message key={i} text={message}/>);
+  const messagesMarkup = messages.map((message, i) => <Message key={i} text={message} getReplyText={getReplyText} />);
 
   return (
     <div className="App">
