@@ -15,7 +15,7 @@ function App() {
     if (replyState) {
       replyState.classList.remove('replyState');
 
-      for (let i =0;i < messageArray.length;i++) {
+      for (let i = 0;i < messageArray.length;i++) {
         if (i === messageArray.length - 2) {
           messageArray[i].classList.add('replied');
         }

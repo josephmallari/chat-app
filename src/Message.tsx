@@ -26,7 +26,7 @@ export default function Message({text, getReplyText}: Props): ReactElement {
     else {
       document.querySelectorAll('.message').forEach(message => message.classList.remove('blur'));
     }
-  }, [replyState]);
+  }, [replyState, getReplyText]);
 
   const replyStateClass = replyState ? ' replyState' : '';
 
