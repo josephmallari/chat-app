@@ -1,38 +1,48 @@
 import { ReactElement, useState, useRef, useEffect } from 'react'
+import Reply from './Reply';
 
 interface Props {
   text: string,
-  getReplyText: (replyText: string) => void 
+  replyText: string,
+  setReplyText: (replyText: string) => void,
+  index: number,
+  setIndex: (index: number) => void,
+  activeIndex: number
 }
 
-export default function Message({text, getReplyText}: Props): ReactElement {
+export default function Message({text, replyText, index, activeIndex, setReplyText, setIndex}: Props): ReactElement {
   const [replyState, setReplyState] = useState<boolean>(false);
   const replyRef = useRef<HTMLDivElement>(null);
+  const messageRef = useRef<HTMLDivElement>(null);
 
   function toggleReplyState() {
     setReplyState(!replyState);
+    setIndex(index);
+
+    if (replyRef && replyRef.current) {
+      setReplyText(replyRef.current.innerText);
+    }
   }
 
+  const activeClass = 'replyState';
+
   useEffect(() => {
-    if (replyState) {
-      document.querySelectorAll('.message').forEach(message => message.classList.add('blur'));
-
-      if (replyRef && replyRef.current) {
-        replyRef.current.classList.remove('blur');
-
-        getReplyText(replyRef.current.innerHTML)
-      }
+    if (replyState && activeIndex === index) {
+      messageRef.current?.classList.add(activeClass)
+    } else {
+      messageRef.current?.classList.remove(activeClass)
+      setReplyState(false);
     }
-    else {
-      document.querySelectorAll('.message').forEach(message => message.classList.remove('blur'));
-    }
-  }, [replyState, getReplyText]);
+  });
 
-  const replyStateClass = replyState ? ' replyState' : '';
+  console.log(replyState, index);
+
+  const reply = replyText ? <Reply replyText={replyText} /> : null;
 
   return (
-    <div ref={replyRef} onClick={toggleReplyState} className={`message${replyStateClass}`}>
-     {text} 
+    <div ref={messageRef} onClick={toggleReplyState} className='message'>
+      {reply}
+      <div ref={replyRef} className="message__text">{text}</div>
     </div>
   )
 }

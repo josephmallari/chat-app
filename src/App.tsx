@@ -1,53 +1,39 @@
-import React, { useState , useEffect} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Message from './Message';
 import './App.css';
 
+interface Messages {
+  message: string
+  reply: string
+}
+
 function App() {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Messages[]>([]);
   const [inputText, setInputText] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
+  const [activeIndex, setIndex] = useState<number>(0);
+  const messagesRef = useRef<HTMLSpanElement>(null);
 
-  function triggerLastReplied() {
-    const messageArray = document.querySelectorAll('.message');
-    const replyState = document.querySelector('.replyState');
-
-    if (replyState) {
-      replyState.classList.remove('replyState');
-
-      for (let i = 0;i < messageArray.length;i++) {
-        if (i === messageArray.length - 2) {
-          messageArray[i].classList.add('replied');
-        }
-      }
+  useEffect(() => {
+    if (messagesRef && messagesRef.current) {
+       messagesRef.current.scrollIntoView({behavior:'smooth'})
     }
-  }
+  }, [messages]);
 
   function submitMessage(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!inputText) return;
 
-    if (replyText) {
-      setMessages(prevMessages => [...prevMessages, replyText]);
-      setReplyText('');
-    }
+    setMessages([...messages, { message: inputText, reply: replyText}]);
 
-    setMessages(prevMessages => [...prevMessages, inputText]);
     setInputText('');
+    setReplyText('');
   }
 
-  function getReplyText(replyText: string) {
-    setReplyText(replyText);
-  }
-
-  useEffect(() => {
-    if (document.querySelector('.replyState')) {
-      triggerLastReplied();
-    }
-  }, [messages]);
-
-
-  const messagesMarkup = messages.map((message, i) => <Message key={i} text={message} getReplyText={getReplyText} />);
+  const messagesMarkup = messages.map((message, i) => 
+  <Message key={i} index={i} text={message.message} replyText={message.reply} 
+  activeIndex={activeIndex} setReplyText={setReplyText} setIndex={setIndex}/>);
 
   return (
     <div className="chat-app">
@@ -61,6 +47,7 @@ function App() {
         </div>
         <div className="messages">
           {messagesMarkup}
+          <span ref={messagesRef}></span>
         </div>
         <div className="submit-wrapper">
           <form onSubmit={submitMessage}>
