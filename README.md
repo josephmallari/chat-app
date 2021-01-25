@@ -12,6 +12,13 @@ Clone master branch
 npm install
 ```
 
+then 
+
+```bash
+npm start
+```
+
+
 ## Usage
 Enter a User name 
 
