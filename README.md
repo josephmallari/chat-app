@@ -12,14 +12,13 @@ Clone master branch
 npm install
 ```
 
-then 
-
+## Usage
 ```bash
 npm start
 ```
 
+Then go to localhost:3000 on browser of choice.
 
-## Usage
 Enter a User name 
 
 In the chat box, type in a message and press enter to submit message.
