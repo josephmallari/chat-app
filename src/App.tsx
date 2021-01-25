@@ -27,7 +27,7 @@ function App() {
     if (!inputText) return;
 
     // set messages to messages array
-    setMessages([...messages, { message: inputText, reply: replyText}]);
+    setMessages([...messages, { message: inputText, reply: replyText }]);
 
     // reset fields
     setInputText('');
