@@ -3,6 +3,9 @@
 Chat App built with React/Typescript
 
 It's a one sided conversation with no other user on the other end or bot response.
+Has the ablity to:
+- Enter text in form
+- Reply to message in form
 
 ## Installation
 
