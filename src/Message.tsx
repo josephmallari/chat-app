@@ -4,10 +4,10 @@ import Reply from './Reply';
 interface Props {
   text: string,
   replyText: string,
-  setReplyText: (replyText: string) => void,
   index: number,
+  activeIndex: number,
+  setReplyText: (replyText: string) => void,
   setIndex: (index: number) => void,
-  activeIndex: number
 }
 
 export default function Message({text, replyText, index, activeIndex, setReplyText, setIndex}: Props): ReactElement {
@@ -15,10 +15,14 @@ export default function Message({text, replyText, index, activeIndex, setReplyTe
   const replyRef = useRef<HTMLDivElement>(null);
   const messageRef = useRef<HTMLDivElement>(null);
 
+  // toggle reply state
   function toggleReplyState() {
     setReplyState(!replyState);
+
+    // get index to match active state
     setIndex(index);
 
+    // set reply text when replyState is true
     if (replyRef && replyRef.current) {
       setReplyText(replyRef.current.innerText);
     }
@@ -27,16 +31,18 @@ export default function Message({text, replyText, index, activeIndex, setReplyTe
   const activeClass = 'replyState';
 
   useEffect(() => {
+    // set active class when active index and current index is true
     if (replyState && activeIndex === index) {
       messageRef.current?.classList.add(activeClass)
-    } else {
+    } 
+    // otherwise default back to false state and remove class
+    else {
       messageRef.current?.classList.remove(activeClass)
       setReplyState(false);
     }
-  });
+  },[replyState, activeIndex, index]);
 
-  console.log(replyState, index);
-
+  // check if reply text is not null, if not, add reply component
   const reply = replyText ? <Reply replyText={replyText} /> : null;
 
   return (

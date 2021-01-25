@@ -17,6 +17,7 @@ function App() {
 
   useEffect(() => {
     if (messagesRef && messagesRef.current) {
+      // scroll into last message if messages are overflowed
        messagesRef.current.scrollIntoView({behavior:'smooth'})
     }
   }, [messages]);
@@ -25,15 +26,26 @@ function App() {
     e.preventDefault();
     if (!inputText) return;
 
+    // set messages to messages array
     setMessages([...messages, { message: inputText, reply: replyText}]);
 
+    // reset fields
     setInputText('');
     setReplyText('');
   }
 
+  // map messages 
   const messagesMarkup = messages.map((message, i) => 
-  <Message key={i} index={i} text={message.message} replyText={message.reply} 
-  activeIndex={activeIndex} setReplyText={setReplyText} setIndex={setIndex}/>);
+    // pass all corresponding props 
+    <Message 
+      key={i} 
+      index={i} 
+      setIndex={setIndex}
+      activeIndex={activeIndex} 
+      text={message.message} 
+      replyText={message.reply} 
+      setReplyText={setReplyText} 
+    />);
 
   return (
     <div className="chat-app">
