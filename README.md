@@ -1,7 +1,7 @@
 ## Edit 3.2.2021
 I refactored the structure to handle replies differently. I created a replies array in the Message object. If the "Reply State" is active, 
 messages submitted in the form will be pushed into the replies array with the corresponding index. Replies will then be passed as props into
-the Message component, and replies are mapped in under the message.
+the Message component, and replies are mapped in under the message component.
 
 # Chat App
 
