@@ -1,54 +1,28 @@
-import { ReactElement, useState, useRef, useEffect } from 'react'
-import Reply from './Reply';
+import { ReactElement } from 'react'
 
 interface Props {
   text: string,
-  replyText: string,
   index: number,
-  activeIndex: number,
-  setReplyText: (replyText: string) => void,
-  setIndex: (index: number) => void,
+  activeIndex: number | null,
+  replies: string[] | null,
+  replyState: boolean,
+  toggleReplyState: (index: number) => void
 }
 
-export default function Message({text, replyText, index, activeIndex, setReplyText, setIndex}: Props): ReactElement {
-  const [replyState, setReplyState] = useState<boolean>(false);
-  const replyRef = useRef<HTMLDivElement>(null);
-  const messageRef = useRef<HTMLDivElement>(null);
+export default function Message({text, index, activeIndex, replies, replyState, toggleReplyState}: Props): ReactElement {
 
-  // toggle reply state
-  function toggleReplyState() {
-    setReplyState(!replyState);
+  let replyMarkup;
 
-    // get index to match active state
-    setIndex(index);
-
-    // set reply text when replyState is true
-    if (replyRef && replyRef.current) {
-      setReplyText(replyRef.current.innerText);
-    }
+  if (replies) {
+    replyMarkup = replies.map((reply, i) => <div style={{ marginLeft: `${10 * (i+1)}px` }}className="reply" key={i}>{reply}</div>);
   }
 
-  const activeClass = 'replyState';
-
-  useEffect(() => {
-    // set active class when active index and current index is true
-    if (replyState && activeIndex === index) {
-      messageRef.current?.classList.add(activeClass)
-    } 
-    // otherwise default back to false state and remove class
-    else {
-      messageRef.current?.classList.remove(activeClass)
-      setReplyState(false);
-    }
-  },[replyState, activeIndex, index]);
-
-  // check if reply text is not null, if not, add reply component
-  const reply = replyText ? <Reply replyText={replyText} /> : null;
+  const activeClass = activeIndex === index && replyState ? ' replyState' : '';
 
   return (
-    <div ref={messageRef} onClick={toggleReplyState} className='message'>
-      {reply}
-      <div ref={replyRef} className="message__text">{text}</div>
+    <div onClick={() => toggleReplyState(index)} className={`message ${activeClass}`}>
+      <div className="message__text">{text}</div>
+      {replyMarkup}
     </div>
   )
 }

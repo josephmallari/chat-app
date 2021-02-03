@@ -3,48 +3,68 @@ import Message from './Message';
 import './App.css';
 
 interface Messages {
-  message: string
-  reply: string
+  message: string,
+  replies: string[]
 }
 
 function App() {
   const [messages, setMessages] = useState<Messages[]>([]);
   const [inputText, setInputText] = useState<string>('');
-  const [replyText, setReplyText] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
-  const [activeIndex, setIndex] = useState<number>(0);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [replyState, setReplyState] = useState<boolean>(false);
   const messagesRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (messagesRef && messagesRef.current) {
+
       // scroll into last message if messages are overflowed
        messagesRef.current.scrollIntoView({behavior:'smooth'})
     }
   }, [messages]);
 
+  function toggleReplyState(index: number) {
+    setReplyState(prevState => !prevState);
+    setActiveIndex(index);
+  }
+
   function submitMessage(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!inputText) return;
 
-    // set messages to messages array
-    setMessages([...messages, { message: inputText, reply: replyText }]);
+    // push to replies array when replystate is active
+    if (replyState && activeIndex >= 0) {
+
+      // copy of messages
+      let messagesArray = [...messages];
+
+      // find index on array and push replies to replies array
+      messagesArray[activeIndex].replies.push(inputText);
+
+      // update setMesages state
+      setMessages(messagesArray);
+    } 
+    else {
+      setMessages([...messages, { message: inputText, replies: []}]);
+    }
 
     // reset fields
     setInputText('');
-    setReplyText('');
+    setReplyState(false);
   }
 
-  // map messages 
+  // // map messages 
   const messagesMarkup = messages.map((message, i) => 
+
     // pass all corresponding props 
     <Message 
       key={i} 
       index={i} 
-      setIndex={setIndex}
-      activeIndex={activeIndex} 
-      text={message.message} 
-      replyText={message.reply} 
-      setReplyText={setReplyText} 
+      text={message.message}
+      activeIndex={activeIndex}
+      replies={message.replies.length > 0 ? message.replies : null}
+      toggleReplyState={toggleReplyState}
+      replyState={replyState}
     />);
 
   return (
