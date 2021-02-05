@@ -60,7 +60,7 @@ form button {
 
 .messages {
   height: 400px;
-  overflow: scroll;
+  overflow: auto;
   padding: 13px 0 0 12px;
   margin-bottom: 60px;
 }
